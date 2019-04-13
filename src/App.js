@@ -2,6 +2,15 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Input, FormGroup, Label, Modal, ModalHeader, ModalBody, ModalFooter, Table, Button } from 'reactstrap';
 
+/*
+ {
+        "newsPaperId": 1,
+        "newsPaperName": "m",
+        "issueDate": "2019-04-16T18:30:00.000+0000",
+        "status": "m"
+    },
+ */  
+
 class App extends Component {
   state = {
     books: [],
@@ -31,7 +40,7 @@ class App extends Component {
     });
   }
   addBook() {
-    axios.post('http://localhost:3000/books', this.state.newBookData).then((response) => {
+    axios.post('localhost:8081/api/invitation/newsPapers', this.state.newBookData).then((response) => {
       let { books } = this.state;
 
       books.push(response.data);
