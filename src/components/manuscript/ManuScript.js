@@ -13,42 +13,42 @@ import { Input, FormGroup, Label, Modal, ModalHeader, ModalBody, ModalFooter, Ta
 
 class App extends Component {
   state = {
-    books: [],
-    newBookData: {
+    manuscripts: [],
+    newManuScriptData: {
       manuscriptName: '',
       year: '',
       status: ''
     },
-    editBookData: {
+    editManuScriptData: {
       manuscriptId: '',
       manuscriptName: '',
       year: '',
       status: ''
     },
-    newBookModal: false,
-    editBookModal: false
+    newManuScriptModal: false,
+    editManuScriptModal: false
   }
   componentWillMount() {
-    this._refreshBooks();
+    this._refreshManuScripts();
   }
-  toggleNewBookModal() {
+  toggleNewManuScriptModal() {
     this.setState({
-      newBookModal: !this.state.newBookModal
+      newManuScriptModal: !this.state.newManuScriptModal
     });
   }
-  toggleEditBookModal() {
+  toggleEditManuScriptModal() {
     this.setState({
-      editBookModal: !this.state.editBookModal
+      editManuScriptModal: !this.state.editManuScriptModal
     });
   }
-  addBook() {
-    axios.post('http://localhost:8081/api/invitation/manuscripts/', this.state.newBookData).then((response) => {
-      let { books } = this.state;
+  addManuScript() {
+    axios.post('http://localhost:8081/api/invitation/manuscripts/', this.state.newManuScriptData).then((response) => {
+      let { manuscripts } = this.state;
 
-      books.push(response.data);
-      this._refreshBooks();
+      manuscripts.push(response.data);
+      this._refreshManuScripts();
       this.setState({
-        books, newBookModal: false, newBookData: {
+        manuscripts, newManuScriptModal: false, newManuScriptData: {
           manuscriptName: '',
           year: '',
           status: ''
@@ -58,49 +58,49 @@ class App extends Component {
   }
 
   //localhost:8081/api/invitation/manuscripts/
-  updateBook() {
-    let { manuscriptName, year, status } = this.state.editBookData;
+  updateManuScript() {
+    let { manuscriptName, year, status } = this.state.editManuScriptData;
 
-    axios.put('http://localhost:8081/api/invitation/manuscripts/' + this.state.editBookData.manuscriptId, {
+    axios.put('http://localhost:8081/api/invitation/manuscripts/' + this.state.editManuScriptData.manuscriptId, {
       manuscriptName, year, status
     }).then((response) => {
-      this._refreshBooks();
+      this._refreshManuScripts();
 
       this.setState({
-        editBookModal: false, editBookData: { manuscriptId: '', manuscriptName: '', year: '', status: '' }
+        editManuScriptModal: false, editManuScriptData: { manuscriptId: '', manuscriptName: '', year: '', status: '' }
       })
     });
   }
 
-  editBook(manuscriptId, manuscriptName, year, status) {
+  editManuScript(manuscriptId, manuscriptName, year, status) {
     this.setState({
-      editBookData: { manuscriptId, manuscriptName, year, status }, editBookModal: !this.state.editBookModal
+      editManuScriptData: { manuscriptId, manuscriptName, year, status }, editManuScriptModal: !this.state.editManuScriptModal
     });
   }
 
   //localhost:8081/api/invitation/manuscripts
-  deleteBook(manuscriptId) {
+  deleteManuScript(manuscriptId) {
     axios.delete('http://localhost:8081/api/invitation/manuscripts/' + manuscriptId).then((response) => {
-      this._refreshBooks();
+      this._refreshManuScripts();
     });
   }
-  _refreshBooks() {
+  _refreshManuScripts() {
     axios.get('http://localhost:8081/api/invitation/manuscripts').then((response) => {
       this.setState({
-        books: response.data
+        manuscripts: response.data
       })
     });
   }
   render() {
-    let books = this.state.books.map((book) => {
+    let manuscripts = this.state.manuscripts.map((ManuScript) => {
       return (
-        <tr key={book.manuscriptId}>
-          <td>{book.manuscriptName}</td>
-          <td>{book.year}</td>
-          <td>{book.status}</td>
+        <tr key={ManuScript.manuscriptId}>
+          <td>{ManuScript.manuscriptName}</td>
+          <td>{ManuScript.year}</td>
+          <td>{ManuScript.status}</td>
           <td>
-            <Button color="success" size="sm" className="mr-2" onClick={this.editBook.bind(this, book.manuscriptId, book.manuscriptName, book.year, book.status)}>Edit</Button>
-            <Button color="danger" size="sm" onClick={this.deleteBook.bind(this, book.manuscriptId)}>Delete</Button>
+            <Button color="success" size="sm" className="mr-2" onClick={this.editManuScript.bind(this, ManuScript.manuscriptId, ManuScript.manuscriptName, ManuScript.year, ManuScript.status)}>Edit</Button>
+            <Button color="danger" size="sm" onClick={this.deleteManuScript.bind(this, ManuScript.manuscriptId)}>Delete</Button>
           </td>
         </tr>
       )
@@ -108,92 +108,92 @@ class App extends Component {
     return (
       <div className="App container">
 
-        <h1>Books App</h1>
+        <h1>ManuScripts App</h1>
 
-        <Button className="my-3" color="primary" onClick={this.toggleNewBookModal.bind(this)}>Add Book</Button>
+        <Button className="my-3" color="primary" onClick={this.toggleNewManuScriptModal.bind(this)}>Add ManuScript</Button>
 
-        <Modal isOpen={this.state.newBookModal} toggle={this.toggleNewBookModal.bind(this)}>
-          <ModalHeader toggle={this.toggleNewBookModal.bind(this)}>Add new ManuScript</ModalHeader>
+        <Modal isOpen={this.state.newManuScriptModal} toggle={this.toggleNewManuScriptModal.bind(this)}>
+          <ModalHeader toggle={this.toggleNewManuScriptModal.bind(this)}>Add new ManuScript</ModalHeader>
           <ModalBody>
             <FormGroup>
               <Label for="manuscriptName">ManuScript Name</Label>
-              <Input id="manuscriptName" value={this.state.newBookData.manuscriptName} onChange={(e) => {
-                let { newBookData } = this.state;
+              <Input id="manuscriptName" value={this.state.newManuScriptData.manuscriptName} onChange={(e) => {
+                let { newManuScriptData } = this.state;
 
-                newBookData.manuscriptName = e.target.value;
+                newManuScriptData.manuscriptName = e.target.value;
 
-                this.setState({ newBookData });
+                this.setState({ newManuScriptData });
               }} />
             </FormGroup>
 
             <FormGroup>
               <Label for="year">Year</Label>
-              <Input id="year" value={this.state.newBookData.year} onChange={(e) => {
-                let { newBookData } = this.state;
+              <Input id="year" value={this.state.newManuScriptData.year} onChange={(e) => {
+                let { newManuScriptData } = this.state;
 
-                newBookData.year = e.target.value;
+                newManuScriptData.year = e.target.value;
 
-                this.setState({ newBookData });
+                this.setState({ newManuScriptData });
               }} />
             </FormGroup>
 
             <FormGroup>
               <Label for="status">Status</Label>
-              <Input id="status" value={this.state.newBookData.status} onChange={(e) => {
-                let { newBookData } = this.state;
+              <Input id="status" value={this.state.newManuScriptData.status} onChange={(e) => {
+                let { newManuScriptData } = this.state;
 
-                newBookData.status = e.target.value;
+                newManuScriptData.status = e.target.value;
 
-                this.setState({ newBookData });
+                this.setState({ newManuScriptData });
               }} />
             </FormGroup>
 
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.addBook.bind(this)}>Add Book</Button>{' '}
-            <Button color="secondary" onClick={this.toggleNewBookModal.bind(this)}>Cancel</Button>
+            <Button color="primary" onClick={this.addManuScript.bind(this)}>Add ManuScript</Button>{' '}
+            <Button color="secondary" onClick={this.toggleNewManuScriptModal.bind(this)}>Cancel</Button>
           </ModalFooter>
         </Modal>
 
-        <Modal isOpen={this.state.editBookModal} toggle={this.toggleEditBookModal.bind(this)}>
-          <ModalHeader toggle={this.toggleEditBookModal.bind(this)}>Edit a ManuScript</ModalHeader>
+        <Modal isOpen={this.state.editManuScriptModal} toggle={this.toggleEditManuScriptModal.bind(this)}>
+          <ModalHeader toggle={this.toggleEditManuScriptModal.bind(this)}>Edit a ManuScript</ModalHeader>
           <ModalBody>
             <FormGroup>
               <Label for="manuscriptName">ManuScript Name</Label>
-              <Input id="manuscriptName" value={this.state.editBookData.manuscriptName} onChange={(e) => {
-                let { editBookData } = this.state;
+              <Input id="manuscriptName" value={this.state.editManuScriptData.manuscriptName} onChange={(e) => {
+                let { editManuScriptData } = this.state;
 
-                editBookData.manuscriptName = e.target.value;
+                editManuScriptData.manuscriptName = e.target.value;
 
-                this.setState({ editBookData });
+                this.setState({ editManuScriptData });
               }} />
             </FormGroup>
             <FormGroup>
               <Label for="year">year</Label>
-              <Input id="year" value={this.state.editBookData.year} onChange={(e) => {
-                let { editBookData } = this.state;
+              <Input id="year" value={this.state.editManuScriptData.year} onChange={(e) => {
+                let { editManuScriptData } = this.state;
 
-                editBookData.year = e.target.value;
+                editManuScriptData.year = e.target.value;
 
-                this.setState({ editBookData });
+                this.setState({ editManuScriptData });
               }} />
             </FormGroup>
             <FormGroup>
               <Label for="status">status</Label>
-              <Input id="status" value={this.state.editBookData.status} onChange={(e) => {
-                let { editBookData } = this.state;
+              <Input id="status" value={this.state.editManuScriptData.status} onChange={(e) => {
+                let { editManuScriptData } = this.state;
 
-                editBookData.status = e.target.value;
+                editManuScriptData.status = e.target.value;
 
-                this.setState({ editBookData });
+                this.setState({ editManuScriptData });
               }} />
             </FormGroup>
 
 
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.updateBook.bind(this)}>Update Book</Button>{' '}
-            <Button color="secondary" onClick={this.toggleEditBookModal.bind(this)}>Cancel</Button>
+            <Button color="primary" onClick={this.updateManuScript.bind(this)}>Update ManuScript</Button>{' '}
+            <Button color="secondary" onClick={this.toggleEditManuScriptModal.bind(this)}>Cancel</Button>
           </ModalFooter>
         </Modal>
 
@@ -209,7 +209,7 @@ class App extends Component {
           </thead>
 
           <tbody>
-            {books}
+            {manuscripts}
           </tbody>
         </Table>
       </div>

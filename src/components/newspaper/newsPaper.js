@@ -13,42 +13,42 @@ import { Input, FormGroup, Label, Modal, ModalHeader, ModalBody, ModalFooter, Ta
 
 class newsPaper extends Component {
   state = {
-    books: [],
-    newBookData: {
+    newspapers: [],
+    newNewsPaperData: {
       newsPaperName: '',
       issueDate: '',
       status: ''
     },
-    editBookData: {
+    editNewsPaperData: {
       newsPaperId: '',
       newsPaperName: '',
       issueDate: '',
       status: ''
     },
-    newBookModal: false,
-    editBookModal: false
+    newNewsPaperModal: false,
+    editNewsPaperModal: false
   }
   componentWillMount() {
-    this._refreshBooks();
+    this._refreshNewsPapers();
   }
-  toggleNewBookModal() {
+  toggleNewNewsPaperModal() {
     this.setState({
-      newBookModal: !this.state.newBookModal
+      newNewsPaperModal: !this.state.newNewsPaperModal
     });
   }
-  toggleEditBookModal() {
+  toggleEditNewsPaperModal() {
     this.setState({
-      editBookModal: !this.state.editBookModal
+      editNewsPaperModal: !this.state.editNewsPaperModal
     });
   }
-  addBook() {
-    axios.post('http://localhost:8081/api/invitation/newsPapers', this.state.newBookData).then((response) => {
-      let { books } = this.state;
+  addNewsPaper() {
+    axios.post('http://localhost:8081/api/invitation/newsPapers', this.state.newNewsPaperData).then((response) => {
+      let { newspapers } = this.state;
 
-      books.push(response.data);
-      this._refreshBooks();
+      newspapers.push(response.data);
+      this._refreshNewsPapers();
       this.setState({
-        books, newBookModal: false, newBookData: {
+        newspapers, newNewsPaperModal: false, newNewsPaperData: {
           newsPaperName: '',
           issueDate: '',
           status: ''
@@ -56,48 +56,48 @@ class newsPaper extends Component {
       });
     });
   }
-  updateBook() {
-    let { newsPaperName,issueDate,status } = this.state.editBookData;
+  updateNewsPaper() {
+    let { newsPaperName,issueDate,status } = this.state.editNewsPaperData;
 
-    axios.put('http://localhost:8081/api/invitation/newsPapers/' + this.state.editBookData.newsPaperId, {
+    axios.put('http://localhost:8081/api/invitation/newsPapers/' + this.state.editNewsPaperData.newsPaperId, {
       newsPaperName, issueDate,status
     }).then((response) => {
-      this._refreshBooks();
+      this._refreshNewsPapers();
 
       this.setState({
-        editBookModal: false, editBookData: { newsPaperId: '', newsPaperName: '', issueDate: '',status: '' }
+        editNewsPaperModal: false, editNewsPaperData: { newsPaperId: '', newsPaperName: '', issueDate: '',status: '' }
       })
     });
   }
-  editBook(newsPaperId, newsPaperName,issueDate,status) {
+  editNewsPaper(newsPaperId, newsPaperName,issueDate,status) {
     this.setState({
-      editBookData: { newsPaperId, newsPaperName,issueDate,status }, editBookModal: !this.state.editBookModal
+      editNewsPaperData: { newsPaperId, newsPaperName,issueDate,status }, editNewsPaperModal: !this.state.editNewsPaperModal
     });
   }
 
   //localhost:8081/api/invitation/newsPapers/2
-  deleteBook(newsPaperId) {
+  deleteNewsPaper(newsPaperId) {
     axios.delete('http://localhost:8081/api/invitation/newsPapers/' + newsPaperId).then((response) => {
-      this._refreshBooks();
+      this._refreshNewsPapers();
     });
   }
-  _refreshBooks() {
+  _refreshNewsPapers() {
     axios.get('http://localhost:8081/api/invitation/newsPapers').then((response) => {
       this.setState({
-        books: response.data
+        newspapers: response.data
       })
     });
   }
   render() {
-    let books = this.state.books.map((book) => {
+    let newspapers = this.state.newspapers.map((NewsPaper) => {
       return (
-        <tr key={book.newsPaperId}>
-          <td>{book.newsPaperName}</td>
-          <td>{book.issueDate}</td>
-          <td>{book.status}</td>
+        <tr key={NewsPaper.newsPaperId}>
+          <td>{NewsPaper.newsPaperName}</td>
+          <td>{NewsPaper.issueDate}</td>
+          <td>{NewsPaper.status}</td>
           <td>
-            <Button color="success" size="sm" className="mr-2" onClick={this.editBook.bind(this, book.newsPaperId, book.newsPaperName, book.issueDate,book.status)}>Edit</Button>
-            <Button color="danger" size="sm" onClick={this.deleteBook.bind(this, book.newsPaperId)}>Delete</Button>
+            <Button color="success" size="sm" className="mr-2" onClick={this.editNewsPaper.bind(this, NewsPaper.newsPaperId, NewsPaper.newsPaperName, NewsPaper.issueDate,NewsPaper.status)}>Edit</Button>
+            <Button color="danger" size="sm" onClick={this.deleteNewsPaper.bind(this, NewsPaper.newsPaperId)}>Delete</Button>
           </td>
         </tr>
       )
@@ -105,92 +105,92 @@ class newsPaper extends Component {
     return (
       <div className="App container">
 
-        <h1>Books App</h1>
+        <h1>NewsPapers App</h1>
 
-        <Button className="my-3" color="primary" onClick={this.toggleNewBookModal.bind(this)}>Add Book</Button>
+        <Button className="my-3" color="primary" onClick={this.toggleNewNewsPaperModal.bind(this)}>Add NewsPaper</Button>
 
-        <Modal isOpen={this.state.newBookModal} toggle={this.toggleNewBookModal.bind(this)}>
-          <ModalHeader toggle={this.toggleNewBookModal.bind(this)}>Add a new book</ModalHeader>
+        <Modal isOpen={this.state.newNewsPaperModal} toggle={this.toggleNewNewsPaperModal.bind(this)}>
+          <ModalHeader toggle={this.toggleNewNewsPaperModal.bind(this)}>Add a new NewsPaper</ModalHeader>
           <ModalBody>
             <FormGroup>
               <Label for="newsPaperName">News Paper Name</Label>
-              <Input id="newsPaperName" value={this.state.newBookData.newsPaperName} onChange={(e) => {
-                let { newBookData } = this.state;
+              <Input id="newsPaperName" value={this.state.newNewsPaperData.newsPaperName} onChange={(e) => {
+                let { newNewsPaperData } = this.state;
 
-                newBookData.newsPaperName = e.target.value;
+                newNewsPaperData.newsPaperName = e.target.value;
 
-                this.setState({ newBookData });
+                this.setState({ newNewsPaperData });
               }} />
             </FormGroup>
 
             <FormGroup>
               <Label for="issueDate">Issue Date</Label>
-              <Input id="issueDate" value={this.state.newBookData.issueDate} onChange={(e) => {
-                let { newBookData } = this.state;
+              <Input id="issueDate" value={this.state.newNewsPaperData.issueDate} onChange={(e) => {
+                let { newNewsPaperData } = this.state;
 
-                newBookData.issueDate = e.target.value;
+                newNewsPaperData.issueDate = e.target.value;
 
-                this.setState({ newBookData });
+                this.setState({ newNewsPaperData });
               }} />
             </FormGroup>
 
             <FormGroup>
               <Label for="status">Status</Label>
-              <Input id="status" value={this.state.newBookData.status} onChange={(e) => {
-                let { newBookData } = this.state;
+              <Input id="status" value={this.state.newNewsPaperData.status} onChange={(e) => {
+                let { newNewsPaperData } = this.state;
 
-                newBookData.status = e.target.value;
+                newNewsPaperData.status = e.target.value;
 
-                this.setState({ newBookData });
+                this.setState({ newNewsPaperData });
               }} />
             </FormGroup>
 
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.addBook.bind(this)}>Add Book</Button>{' '}
-            <Button color="secondary" onClick={this.toggleNewBookModal.bind(this)}>Cancel</Button>
+            <Button color="primary" onClick={this.addNewsPaper.bind(this)}>Add NewsPaper</Button>{' '}
+            <Button color="secondary" onClick={this.toggleNewNewsPaperModal.bind(this)}>Cancel</Button>
           </ModalFooter>
         </Modal>
 
-        <Modal isOpen={this.state.editBookModal} toggle={this.toggleEditBookModal.bind(this)}>
-          <ModalHeader toggle={this.toggleEditBookModal.bind(this)}>Edit a new book</ModalHeader>
+        <Modal isOpen={this.state.editNewsPaperModal} toggle={this.toggleEditNewsPaperModal.bind(this)}>
+          <ModalHeader toggle={this.toggleEditNewsPaperModal.bind(this)}>Edit a new NewsPaper</ModalHeader>
           <ModalBody>
             <FormGroup>
               <Label for="newsPaperName">News Paper Name</Label>
-              <Input id="newsPaperName" value={this.state.editBookData.newsPaperName} onChange={(e) => {
-                let { editBookData } = this.state;
+              <Input id="newsPaperName" value={this.state.editNewsPaperData.newsPaperName} onChange={(e) => {
+                let { editNewsPaperData } = this.state;
 
-                editBookData.newsPaperName = e.target.value;
+                editNewsPaperData.newsPaperName = e.target.value;
 
-                this.setState({ editBookData });
+                this.setState({ editNewsPaperData });
               }} />
             </FormGroup>
             <FormGroup>
               <Label for="issueDate">IssueDate</Label>
-              <Input id="issueDate" value={this.state.editBookData.issueDate} onChange={(e) => {
-                let { editBookData } = this.state;
+              <Input id="issueDate" value={this.state.editNewsPaperData.issueDate} onChange={(e) => {
+                let { editNewsPaperData } = this.state;
 
-                editBookData.issueDate = e.target.value;
+                editNewsPaperData.issueDate = e.target.value;
 
-                this.setState({ editBookData });
+                this.setState({ editNewsPaperData });
               }} />
             </FormGroup>
             <FormGroup>
               <Label for="status">status</Label>
-              <Input id="status" value={this.state.editBookData.status} onChange={(e) => {
-                let { editBookData } = this.state;
+              <Input id="status" value={this.state.editNewsPaperData.status} onChange={(e) => {
+                let { editNewsPaperData } = this.state;
 
-                editBookData.status = e.target.value;
+                editNewsPaperData.status = e.target.value;
 
-                this.setState({ editBookData });
+                this.setState({ editNewsPaperData });
               }} />
             </FormGroup>
 
 
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.updateBook.bind(this)}>Update Book</Button>{' '}
-            <Button color="secondary" onClick={this.toggleEditBookModal.bind(this)}>Cancel</Button>
+            <Button color="primary" onClick={this.updateNewsPaper.bind(this)}>Update NewsPaper</Button>{' '}
+            <Button color="secondary" onClick={this.toggleEditNewsPaperModal.bind(this)}>Cancel</Button>
           </ModalFooter>
         </Modal>
 
@@ -206,7 +206,7 @@ class newsPaper extends Component {
           </thead>
 
           <tbody>
-            {books}
+            {newspapers}
           </tbody>
         </Table>
       </div>
