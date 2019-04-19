@@ -46,7 +46,7 @@ class newsPaper extends Component {
       let { books } = this.state;
 
       books.push(response.data);
-
+      this._refreshBooks();
       this.setState({
         books, newBookModal: false, newBookData: {
           newsPaperName: '',
